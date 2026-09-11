@@ -39,7 +39,7 @@
     <script>
         async function calcularNomina() {
             let salario = document.getElementById('salarioBruto').value;
-            let response = await fetch('http://localhost:5000/api/nomina/calcular', {
+            let response = await fetch('https://flask-sistemas-rd.onrender.com/api/nomina/calcular', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ salario_bruto: salario })
