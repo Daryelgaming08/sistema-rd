@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ERP Comercial - República Dominicana</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f7f6; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { color: #333; }
+        input, button { padding: 8px; margin: 5px 0; }
+        button { background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h1>Sistema Integrado - Negocios RD</h1>
+
+    <div class="card">
+        <h2>1. Módulo de Recursos Humanos (Cálculo TSS & Ley)</h2>
+        <label>Salario Bruto Mensual (RD$):</label><br>
+        <input type="number" id="salarioBruto" placeholder="Ej. 35000"><br>
+        <button onclick="calcularNomina()">Calcular Nómina</button>
+        <pre id="resultadoNomina"></pre>
+    </div>
+
+    <div class="card">
+        <h2>2. Módulo de Ventas (POS con ITBIS 18%)</h2>
+        <button onclick="realizarVenta()">Simular Venta (ID 1: Cantidad 2)</button>
+        <pre id="resultadoVenta"></pre>
+    </div>
+
+    <div class="card">
+        <h2>3. Contabilidad (Resumen Fiscal ITBIS)</h2>
+        <button onclick="verContabilidad()">Consultar Resumen Contable</button>
+        <pre id="resultadoContabilidad"></pre>
+    </div>
+
+    <script>
+        async function calcularNomina() {
+            let salario = document.getElementById('salarioBruto').value;
+            let response = await fetch('http://localhost:5000/api/nomina/calcular', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ salario_bruto: salario })
+            });
+            let data = await response.json();
+            document.getElementById('resultadoNomina').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function realizarVenta() {
+            let response = await fetch('http://localhost:5000/api/ventas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: [{ id: 1, cantidad: 2 }] })
+            });
+            let data = await response.json();
+            document.getElementById('resultadoVenta').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function verContabilidad() {
+            let response = await fetch('http://localhost:5000/api/contabilidad/resumen');
+            let data = await response.json();
+            document.getElementById('resultadoContabilidad').innerText = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
